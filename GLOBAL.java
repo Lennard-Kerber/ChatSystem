@@ -12,7 +12,7 @@ public class GLOBAL
     public static final int PORT =  3263; 
     
     
-    public static final String VERSION = "V.020"; 
+    public static final String VERSION = "V.022"; 
     
     
 }
