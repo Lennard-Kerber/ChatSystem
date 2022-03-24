@@ -15,5 +15,7 @@ public class GLOBAL
     public static final String VERSION = "V.024";
     
     
+    public static final String ME = "Lennard";
+    
     
 }
