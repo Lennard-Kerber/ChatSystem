@@ -6,7 +6,7 @@
  * @version 2021-09-30
  */
 
-// Dies ist ein Kommentar.
+// Dies ist ein Kommentar
 
 public interface ServerType
 {
