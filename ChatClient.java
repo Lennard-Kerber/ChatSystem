@@ -15,7 +15,7 @@ import java.net.Socket;
  * so wird die Konferenz für alle Teilnehmer beendet. 
  * 
  * @author LK
- * @version 2021-11-17
+ * @version 2022-03-25
  */
 public class ChatClient implements ClientType
 {
