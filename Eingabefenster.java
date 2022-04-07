@@ -20,17 +20,19 @@ public class Eingabefenster extends Thread {
 
     private ChatClient client;  // Client, an den alle Texte weitergereicht werden
 
-    public Eingabefenster(ChatClient client) {
+    private String fensterTitel;
+    
+    public Eingabefenster(ChatClient client, String fensterTitel) {
         this.client = client;
-
+        this.fensterTitel = fensterTitel;
     }
 
     /**
      * Zeigt den Dialog an.
      * @return eingegebener Text oder "null", wenn das Fenster mit Cancel geschlossen wird
      */
-    public String ask(){
-        String text=JOptionPane.showInputDialog(fenster,"Eingabe");
+    public String ask(String fenstertitel){
+        String text=JOptionPane.showInputDialog(fenster,fenstertitel);
         return text;
 
     }
@@ -47,7 +49,7 @@ public class Eingabefenster extends Thread {
         // solange die Eingabe aktiv sein soll
         while(isActive){
             
-            String antwort = ask(); // ruf den Dialog auf
+            String antwort = ask(fensterTitel); // ruf den Dialog auf
             
             // wenn es eine gültige antwort gibt
             if (antwort != null && !antwort.equalsIgnoreCase("null")){

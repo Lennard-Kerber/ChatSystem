@@ -16,21 +16,8 @@ public class PDU
 
     // Instanzvariablen
     public Header header;
-    public String sdu;
+    public SDU sdu;
 
-    /**
-     * Konstruktor für Objekte der Klasse PDU
-     * @param header Header der Nachricht
-     * @param sdu Datenteil der Nachricht
-     */
-    public PDU(Header header, String sdu)
-    {
-        // Instanzvariable initialisieren
-        this.header = header;
-        this.sdu = sdu;
-    }
-    
-    
     /**
      * Konstruktor für Objekte der Klasse PDU
      * @param header Header der Nachricht
@@ -40,11 +27,10 @@ public class PDU
     {
         // Instanzvariable initialisieren
         this.header = header;
-        
-        // Farben müssen hier behandelt werden
-        this.sdu = sdu.text;
+        this.sdu = sdu;
     }
-
+    
+    
     /**
      * Konstruktor für Objekte der Klasse PDU
      * Die Daten werden als Header und SDU gespeichert.
@@ -57,10 +43,10 @@ public class PDU
         // Instanzvariable initialisieren
         if (strArray.length == 2) {
             this.header = Header.valueOf(strArray[0]);
-            this.sdu    = strArray[1];
+            this.sdu    = SDU.valueOf(strArray[1]);
         } else {
             this.header = Header.NullHeader;
-            this.sdu    = "SDU-ERROR";
+            this.sdu    = null;
         }
     }
 
@@ -70,7 +56,7 @@ public class PDU
      * return PDU
      */
     String getPDU(){
-        return header.toString()+":"+sdu;
+        return header.toString()+":"+sdu.toString();
     }
     
 }

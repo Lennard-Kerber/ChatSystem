@@ -21,6 +21,14 @@ public class SDU
     public int green;
     public int blue;
 
+    
+    public static SDU valueOf(String data){
+        SDU ret = new SDU(data);
+        ret.toColor();
+        return ret;
+    }
+    
+    
     /**
      * Konstruktor für Objekte der Klasse SDU
      */
@@ -61,6 +69,14 @@ public class SDU
             this.green = Integer.parseInt(strArray[2]);
             this.blue  = Integer.parseInt(strArray[3]);
         }
+    }
+    
+    public String toString(){
+        String ret = text;
+        if (red != NULLCOLOR ){
+            ret = ret + ":" + red + ":" + green + ":" + blue; 
+        }
+        return ret;
     }
 
 }

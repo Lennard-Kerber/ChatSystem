@@ -103,7 +103,7 @@ public class ChatServer  implements ServerType
      * @param sdu <code>sdu.text</code>: Text, der übertragen werden soll
      */
     public synchronized void TextAnmeldenIND(ICI ici, SDU sdu){
-        System.out.println("Server: TextAnmeldenIND("+ici.socket.toString()+","+sdu.text+")");
+        System.out.println("Server: TextAnmeldenIND("+ici.socket.toString()+","+sdu.toString()+")");
 
         // Schicke den Text an alle zurück
         try{

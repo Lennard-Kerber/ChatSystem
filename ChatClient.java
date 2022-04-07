@@ -1,4 +1,6 @@
 import java.net.Socket;
+import java.awt.Color;
+import javax.swing.*;
 
 /**
  * Ein ChatClient ist ein Teilnehmer in einer Chatkonferenz. 
@@ -42,6 +44,7 @@ public class ChatClient implements ClientType
     private ICI myICI; // ein Client besitzt genau eine Verbindung, diese wird in myICI gespeichert
     private Anzeigefenster anzeige; // Ausgabefenster   
     private Eingabefenster eingabe; // Eingabefenster
+    private Benutzer benutzer; // mein Benutzer
 
     /**
      * Konstruktor für Objekte der Klasse ChatClient
@@ -51,11 +54,24 @@ public class ChatClient implements ClientType
     public ChatClient(String ip,int port)
     {
         // Instanzvariable initialisieren
+
         myICI = new ICI(ip,port); // von der zukünftigen Verbinung sind ip und port bekannt
         anwendungsschicht = new ChatAnwendungsschicht(this);
         anzeige = new Anzeigefenster();
-        eingabe = new Eingabefenster(this);
-        eingabe.start(); // startet den Thread des Eingabefensters
+        eingabe = new Eingabefenster(this,"Eingabe");
+
+        boolean ok = false;
+        while (!ok){
+            String antwort = vorabfrage("Name:rot:grün:blau");
+            String[] strArray = antwort.split(":",4);
+            if (strArray.length == 4){
+                benutzer = new Benutzer(strArray[0],
+                    Integer.parseInt(strArray[1]),
+                    Integer.parseInt(strArray[2]),
+                    Integer.parseInt(strArray[3]));
+                ok = true;
+            }
+        }
 
         try{
             anwendungsschicht.VerbindungsaufbauREQ(myICI,null);
@@ -76,7 +92,15 @@ public class ChatClient implements ClientType
     public synchronized void TextIND(ICI ici, SDU sdu){
         System.out.println("Client: TextIND("+ici.socket.toString()+","+sdu.text+")");
 
-        anzeige.show(sdu.text);
+        Color c = null;
+
+        if (sdu.red!=SDU.NULLCOLOR){
+            c = new Color(sdu.red,sdu.green,sdu.blue);
+        } else {
+            c = new Color(0,0,0);
+        }
+
+        anzeige.show(sdu.text,c);
     }
 
     /**
@@ -95,7 +119,7 @@ public class ChatClient implements ClientType
             close();
         } else {
             System.out.println("Client: VerbindungsaufbauCONF("+ici.socket.toString()+","+"––"+")");
-
+            eingabe.start(); // startet den Thread des Eingabefensters
         }
 
         String serverVersion = sdu.text;
@@ -106,14 +130,15 @@ public class ChatClient implements ClientType
                 anwendungsschicht.VerbindungsabbauAnfrageREQ(myICI, new SDU(""));
             }  catch (Exception e){
                 e.printStackTrace();
-                
+
             }
         } else{
             System.out.println("Client: ServerVersion ist :"+serverVersion);
-        
+
         }
 
     }
+
     /**
      * Der Verbindungsabbau wurde veranlasst. <p>
      * Der Client wird geschlossen.
@@ -137,7 +162,7 @@ public class ChatClient implements ClientType
 
         // wenn eine Verbindung besteht
         if (myICI != null){
-            SDU sdu = new SDU(text); 
+            SDU sdu = new SDU(benutzer.name+": "+text,benutzer.r,benutzer.g,benutzer.b); 
             try{
                 anwendungsschicht.TextAnmeldenREQ(myICI,sdu); // fordere einen Textwunsch beim Server an
             } catch(Exception e){
@@ -160,6 +185,7 @@ public class ChatClient implements ClientType
         }
 
     }
+
     /**
      * Schließt das Programm und alle gestarteten Threads.
      */
@@ -171,6 +197,10 @@ public class ChatClient implements ClientType
         eingabe.close();
         anzeige.close();
         System.out.println("Client-Programm beendet."); // Beachte: andere Threads können später beendet sein
+    }
+
+    private String vorabfrage(String titel){
+        return JOptionPane.showInputDialog(new JFrame(),titel);
     }
 
 }

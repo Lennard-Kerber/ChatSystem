@@ -1,5 +1,6 @@
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import java.awt.Color;
 
 
 /**
@@ -13,7 +14,7 @@ import javax.swing.JLabel;
 public class Anzeigefenster extends JFrame {
 
     // Instanzvariablen
-    JLabel[] labelArr = new JLabel[20]; // 20 Zeilen, die als Ringpuffer implementiert werden.
+    JLabelCol[] labelArr = new JLabelCol[20]; // 20 Zeilen, die als Ringpuffer implementiert werden.
                                         // Ringpuffer: Wenn die letzte Zeile erreicht ist, wird bei der ersten wieder begonnen. 
                                         //             Die restlichen Zeilen bleiben dabei erhalten.
     int aktpos = 0; // aktuelle Zeile wird initialisiert mit 0 (1. Zeile)
@@ -34,7 +35,7 @@ public class Anzeigefenster extends JFrame {
         
         // zeige alle Zeilen an.
         for (int i=0;i<labelArr.length;i++){
-            labelArr[i] = new JLabel("");
+            labelArr[i] = new JLabelCol(new JLabel(""),null);
             anzeigen(labelArr[i],i);
         }
         
@@ -46,9 +47,10 @@ public class Anzeigefenster extends JFrame {
     // zeige eine Zeile an
     // label: Inhalt der Zeile
     // pos: Position der Zeile (zwischen 0 und 19)
-    private void anzeigen(JLabel label, int pos){       
-        label.setBounds(5,20*pos,790,18);
-        add(label);    
+    private void anzeigen(JLabelCol labelCol, int pos){
+        if (labelCol.col != null) labelCol.label.setForeground(labelCol.col); 
+        if (labelCol.label != null) labelCol.label.setBounds(5,20*pos,790,18);
+        add(labelCol.label);    
     }
     
     /**
@@ -56,8 +58,9 @@ public class Anzeigefenster extends JFrame {
      * Die aktuelle Zeile wechselt bei einem Überlauf wieder in die erste Zeile.
      * @param text Text für die aktuelle Zeile
      */
-    public void show(String text){
-        labelArr[aktpos].setText(text);
+    public void show(String text, Color c){
+        labelArr[aktpos].label.setForeground(c);
+        labelArr[aktpos].label.setText(text);
         aktpos++;                   // erhöhe die aktuelle Zeile um 1
         aktpos = aktpos % 20;       // berechne die neue Zeile modulo 20 
     }

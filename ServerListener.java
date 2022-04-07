@@ -28,9 +28,9 @@ class ServerListener extends Thread
      * @param port Port, auf dem gehorcht werden soll
      * @param anwendungsschicht Anwendungsschicht, an die raportiert wird
      */
-    public ServerListener(int port, ChatAnwendungsschicht anwendungsschicht) {
+    public ServerListener(ICI ici, ChatAnwendungsschicht anwendungsschicht) {
         try{
-            server = new ServerSocket(port); 
+            server = new ServerSocket(ici.port); 
         } catch (IOException e) { 
             e.printStackTrace(); 
             server = null; 
