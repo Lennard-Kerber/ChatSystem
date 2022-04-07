@@ -107,6 +107,42 @@ public abstract class ChatAnwendungsschichtZustand
         System.err.println("ChatAnwendungsschicht –"+name+"–: TextREQ nicht möglich.");
         throw new ZustandException();
     }
+    
+    /**
+     * NickAnmeldungREQ
+     */
+    public  synchronized void NickAnmeldungREQ(ChatAnwendungsschicht kontext,ICI ici,SDU sdu) throws Exception
+    {
+        System.err.println("ChatAnwendungsschicht –"+name+"–: NickAnmeldungREQ nicht möglich.");
+        throw new ZustandException();
+    }
+
+    /**
+     * NickAnmeldungIND
+     */
+    public synchronized void NickAnmeldungIND(ChatAnwendungsschicht kontext,ICI ici,SDU sdu) throws Exception
+    {
+        System.err.println("ChatAnwendungsschicht –"+name+"–: NickAnmeldungIND nicht möglich.");
+        throw new ZustandException();
+    }
+
+    /**
+     * NickAnmeldungRESP
+     */
+    public synchronized void NickAnmeldungRESP(ChatAnwendungsschicht kontext,ICI ici,SDU sdu) throws Exception
+    {
+        System.err.println("ChatAnwendungsschicht –"+name+"–: NickAnmeldungRESP nicht möglich.");
+        throw new ZustandException();
+    }
+
+    /**
+     * NickAnmeldungCONF
+     */
+    public synchronized void NickAnmeldungCONF(ChatAnwendungsschicht kontext,ICI ici,SDU sdu) throws Exception
+    {
+        System.err.println("ChatAnwendungsschicht –"+name+"–: NickAnmeldungCONF nicht möglich.");
+        throw new ZustandException();
+    }
 
     /**
      * TextAnmeldenREQ

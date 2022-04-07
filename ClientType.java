@@ -15,6 +15,11 @@ public interface ClientType
     public void VerbindungsaufbauCONF(ICI ici, SDU sdu);
     
     /**
+     * Der Verbindungsaufbau wird bestätigt.
+     */
+    public void NickAnmeldungCONF(ICI ici, SDU sdu);
+    
+    /**
      * Ein neuer Text kommt vom Server an.
      */
     public void TextIND(ICI ici, SDU sdu);

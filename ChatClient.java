@@ -57,22 +57,8 @@ public class ChatClient implements ClientType
 
         myICI = new ICI(ip,port); // von der zukünftigen Verbinung sind ip und port bekannt
         anwendungsschicht = new ChatAnwendungsschicht(this);
-        anzeige = new Anzeigefenster();
-        eingabe = new Eingabefenster(this,"Eingabe");
 
-        boolean ok = false;
-        while (!ok){
-            String antwort = vorabfrage("Name:rot:grün:blau");
-            String[] strArray = antwort.split(":",4);
-            if (strArray.length == 4){
-                benutzer = new Benutzer(strArray[0],
-                    Integer.parseInt(strArray[1]),
-                    Integer.parseInt(strArray[2]),
-                    Integer.parseInt(strArray[3]));
-                ok = true;
-            }
-        }
-
+        benutzer = fragNachBenutzer("");
         try{
             anwendungsschicht.VerbindungsaufbauREQ(myICI,null);
         } catch (ConnectionException e){
@@ -119,7 +105,13 @@ public class ChatClient implements ClientType
             close();
         } else {
             System.out.println("Client: VerbindungsaufbauCONF("+ici.socket.toString()+","+"––"+")");
-            eingabe.start(); // startet den Thread des Eingabefensters
+            try{
+                anwendungsschicht.NickAnmeldungREQ(ici,new SDU(benutzer.name,benutzer.r,benutzer.g,benutzer.b));
+            }  catch (Exception e){
+                e.printStackTrace();
+
+            }
+
         }
 
         String serverVersion = sdu.text;
@@ -135,6 +127,39 @@ public class ChatClient implements ClientType
         } else{
             System.out.println("Client: ServerVersion ist :"+serverVersion);
 
+        }
+
+    }
+
+    /**
+     * Der Verbindungsaufbau wurde abgeschlossen. <p>
+     * Wenn die Verbindung erfolgreich aufgebaut wurde gilt: <code>ici.socket!=null</code> <p>
+     * Ansonsten wurde keine Verbindung aufgebau.
+     * @param ici Verbindung
+     * @param sdu wird nicht genutzt
+     */
+    public synchronized void NickAnmeldungCONF(ICI ici, SDU sdu){
+        System.out.println("Client: NickAnmeldungCONF("+ici.socket.toString()+","+sdu.text+")");
+
+        Antwort antwort = Antwort.valueOf(sdu.text);
+
+        switch(antwort){
+            case ACK: 
+                anzeige = new Anzeigefenster("Client: "+GLOBAL.VERSION+":"+benutzer.name);
+                eingabe = new Eingabefenster(this,benutzer.name+":");
+                eingabe.start(); // startet den Thread des Eingabefensters
+                break;
+            case REJECT: 
+                benutzer = fragNachBenutzer("Name abgelehnt. Eingabeformat >> ");
+                try
+                {
+                    anwendungsschicht.NickAnmeldungREQ(ici,new SDU(benutzer.name,benutzer.r,benutzer.g,benutzer.b));
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                break;
         }
 
     }
@@ -162,7 +187,7 @@ public class ChatClient implements ClientType
 
         // wenn eine Verbindung besteht
         if (myICI != null){
-            SDU sdu = new SDU(benutzer.name+"! "+text,benutzer.r,benutzer.g,benutzer.b); 
+            SDU sdu = new SDU(text,benutzer.r,benutzer.g,benutzer.b); 
             try{
                 anwendungsschicht.TextAnmeldenREQ(myICI,sdu); // fordere einen Textwunsch beim Server an
             } catch(Exception e){
@@ -199,7 +224,36 @@ public class ChatClient implements ClientType
         System.out.println("Client-Programm beendet."); // Beachte: andere Threads können später beendet sein
     }
 
-    private String vorabfrage(String titel){
+    private Benutzer fragNachBenutzer(String fehlerMeldung){
+        Benutzer ret = null;
+
+        boolean ok = false;
+
+        while (!ok){
+            String antwort = frage(fehlerMeldung+"Name:rot:grün:blau");
+            String[] strArray = antwort.split(":",4);
+            if (strArray.length == 4){
+                String name = strArray[0];
+                int r = Integer.parseInt(strArray[1]);
+                int g = Integer.parseInt(strArray[2]);
+                int b = Integer.parseInt(strArray[3]);
+
+                System.out.println("Client: fragNachBenutzer: "+name+" ("+r+","+g+","+b+")");
+
+                if ((0>r) || (r>255)) r = 120;
+                if ((0>g) || (g>255)) g = 120;
+                if ((0>b) || (b>255)) b = 120;
+
+                ret = new Benutzer(name,r,g,b);
+                System.out.println("Client: fragNachBenutzer: Benutzer: "+ret.toString());
+                ok = true;
+            }
+        }
+
+        return ret;
+    }
+
+    private String frage(String titel){
         return JOptionPane.showInputDialog(new JFrame(),titel);
     }
 

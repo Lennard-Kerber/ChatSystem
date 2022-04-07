@@ -14,6 +14,10 @@ public interface ServerType
      * Eine neue verbindung zum Server wurde hergestellt.
      */
     public void VerbindungsaufbauIND(ICI ici,SDU sdu);
+     /** 
+     * Eine neue verbindung zum Server wurde hergestellt.
+     */
+    public void NickAnmeldungIND(ICI ici,SDU sdu);
     /**
      * Ein neuer Text wird zum Weiterverteilen angezeigt.
      */

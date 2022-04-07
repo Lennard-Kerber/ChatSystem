@@ -29,7 +29,8 @@ public class ChatServer  implements ServerType
     private boolean isActive = true; // true, solange der Server läuft
     private ChatAnwendungsschicht anwendungsschicht = new ChatAnwendungsschicht(this);
     private ArrayList<Socket> socketListe = new ArrayList<Socket>(); // Liste aller Verbindungen zu den Clients
-
+    private BenutzerVerwaltung benutzerVerwaltung = new BenutzerVerwaltung();
+    
     /**
      * Konstruktor für Objekte der Klasse ChatServer
      * @param port Port, auf dem der Server horchen soll
@@ -96,6 +97,31 @@ public class ChatServer  implements ServerType
         
     }
 
+    /** 
+     * Anmeldung einer neuen Verbindung am Server.
+     * <p>
+     * Die neue Verbindung wird in die Liste aller Clientverbindungen aufgenommen.
+     * @param ici neue Verbindung
+     * @param sdu wird nicht genutzt
+     */
+    public synchronized void NickAnmeldungIND(ICI ici,SDU sdu)
+    {
+        System.out.println("Server: NickAnmeldungIND("+ici.socket.toString()+","+sdu.toString()+")");
+        try{
+                System.out.println("Server: NickAnmeldungRESP wird ausgelöst.");
+                boolean erfolg = benutzerVerwaltung.add(ici.socket, new Benutzer(sdu.text,sdu.red,sdu.green,sdu.blue));
+                if (erfolg) sdu = new SDU(Antwort.ACK.toString());
+                else sdu = new SDU(Antwort.REJECT.toString());
+                anwendungsschicht.NickAnmeldungRESP(ici,sdu);
+            } catch(Exception e){
+                e.printStackTrace();
+                System.err.println("ChatServer: unknown Error, ChatSystem will shut down.");
+                close();
+            }
+        
+    }
+ 
+    
     /**
      * Anzeige eines Textwunsches beim Server. <p>
      * Es wird eine Textanforderung für diesen Text an alle bekannten Clientverbindungen geschickt.
@@ -109,7 +135,9 @@ public class ChatServer  implements ServerType
         try{
             // für jede Verbindung
             for(Socket socketAusgang : socketListe){ 
-                anwendungsschicht.TextREQ(new ICI(socketAusgang), sdu); // fordert die Textübertragung an
+                anwendungsschicht.TextREQ(new ICI(socketAusgang), 
+                                          new SDU(benutzerVerwaltung.getBenutzer(ici.socket).name+"! "+sdu.text,
+                                                  sdu.red,sdu.green,sdu.blue)); // fordert die Textübertragung an
             }
         } catch(Exception e){
             e.printStackTrace();

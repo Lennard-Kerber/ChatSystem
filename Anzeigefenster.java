@@ -22,11 +22,11 @@ public class Anzeigefenster extends JFrame {
     /**
      * Erzeugt das Anzeigefenster.
      */
-    public Anzeigefenster() {
+    public Anzeigefenster(String titel) {
         setLayout(null);
         setVisible(true);
         setSize(800, 430);
-        setTitle("Chat Client");
+        setTitle(titel);
         setResizable(false);
         //setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

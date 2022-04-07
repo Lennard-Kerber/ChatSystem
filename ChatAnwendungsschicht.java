@@ -449,6 +449,147 @@ public class ChatAnwendungsschicht extends Thread
     }
 
     /**
+     * Zeigt eine Übertragung von Text an und gibt diesen an den Dienstbenutzer (Client) weiter.
+     * @param ici Verbindung
+     * @param sdu Text, der übertragen wurde
+     */
+    public synchronized void TextIND(ICI ici,SDU sdu) throws Exception
+    {
+        getSocketZustand(ici.socket).zustand.TextIND(this,ici,sdu);
+    }        
+
+    /**
+     * Wird von einem Zustand aufgerufen.
+     * <p>
+     * Zeigt eine Übertragung von Text an und gibt diesen an den Dienstbenutzer (Client) weiter.
+     * @param ici Verbindung
+     * @param sdu Text, der übertragen wurde
+     */
+    public synchronized void TextINDDO(ICI ici,SDU sdu) throws Exception
+    {
+        System.out.println("ChatAnwendungsschicht: TextIND("+ici.toString()+","+sdu.toString()+")");
+        if(client  != null){
+            client.TextIND(ici,sdu); // gibt die Text-Anzeige an den client weiter
+        }else {
+            System.err.println("TextIND: kein Client");
+        }
+    }
+
+    
+    /**
+     * Fordert die Übertragung von Text an den Client an.
+     * @param ici Verbindung
+     * @param sdu Text, der übertragen wird
+     */
+    public synchronized void NickAnmeldungREQ(ICI ici,SDU sdu)  throws Exception
+    {
+        getSocketZustand(ici.socket).zustand.NickAnmeldungREQ(this,ici,sdu);
+    }        
+
+    /**
+     * Wird von einem Zustand aufgerufen.
+     * <p>
+     * Fordert die Übertragung von Text an den Client an.
+     * @param ici Verbindung
+     * @param sdu Text, der übertragen wird
+     */
+    public synchronized void NickAnmeldungREQDO(ICI ici,SDU sdu) throws Exception
+    {
+        System.out.println("ChatAnwendungsschicht: NickAnmeldungREQREQ("+ici.toString()+","+sdu.toString()+")");
+        if(client  != null){
+            PDU pdu = new PDU(Header.NickAnmeldung,sdu); // erzeuge eine PDU mit dem Header "NickAnmeldung" und einen Datenteil mit sdu.text
+
+            send(ici,pdu); // verschicke die PDU für diese Verbindung 
+        }else {
+            System.err.println("NickAnmeldungREQ: kein Client");
+        }
+    }
+
+    /**
+     * Zeigt eine Übertragung von Text an und gibt diesen an den Dienstbenutzer (Client) weiter.
+     * @param ici Verbindung
+     * @param sdu Text, der übertragen wurde
+     */
+    public synchronized void NickAnmeldungIND(ICI ici,SDU sdu) throws Exception
+    {
+        getSocketZustand(ici.socket).zustand.NickAnmeldungIND(this,ici,sdu);
+    }        
+
+    /**
+     * Wird von einem Zustand aufgerufen.
+     * <p>
+     * Zeigt eine Übertragung von Text an und gibt diesen an den Dienstbenutzer (Client) weiter.
+     * @param ici Verbindung
+     * @param sdu Text, der übertragen wurde
+     */
+    public synchronized void NickAnmeldungINDDO(ICI ici,SDU sdu) throws Exception
+    {
+        System.out.println("ChatAnwendungsschicht: NickAnmeldungIND("+ici.toString()+","+sdu.toString()+")");
+        if(server  != null){
+            server.NickAnmeldungIND(ici,sdu); // gibt die Text-Anzeige an den server weiter
+        }else {
+            System.err.println("NickAnmeldungIND: kein Server");
+        }
+    }
+
+    /**
+     * Fordert die Übertragung von Text an den Client an.
+     * @param ici Verbindung
+     * @param sdu Text, der übertragen wird
+     */
+    public synchronized void NickAnmeldungRESP(ICI ici,SDU sdu)  throws Exception
+    {
+        getSocketZustand(ici.socket).zustand.NickAnmeldungRESP(this,ici,sdu);
+    }        
+
+    /**
+     * Wird von einem Zustand aufgerufen.
+     * <p>
+     * Fordert die Übertragung von Text an den Client an.
+     * @param ici Verbindung
+     * @param sdu Text, der übertragen wird
+     */
+    public synchronized void NickAnmeldungRESPDO(ICI ici,SDU sdu) throws Exception
+    {
+        System.out.println("ChatAnwendungsschicht: NickAnmeldungRESP("+ici.toString()+","+sdu.toString()+")");
+        if(server  != null){
+            PDU pdu = new PDU(Header.NickAnmeldungAntwort,sdu); // erzeuge eine PDU mit dem Header "NickAnmeldung" und einen Datenteil mit sdu.text
+
+            send(ici,pdu); // verschicke die PDU für diese Verbindung 
+        }else {
+            System.err.println("NickAnmeldungRESP: kein Server");
+        }
+    }
+
+    /**
+     * Zeigt eine Übertragung von Text an und gibt diesen an den Dienstbenutzer (Client) weiter.
+     * @param ici Verbindung
+     * @param sdu Text, der übertragen wurde
+     */
+    public synchronized void NickAnmeldungCONF(ICI ici,SDU sdu) throws Exception
+    {
+        getSocketZustand(ici.socket).zustand.NickAnmeldungCONF(this,ici,sdu);
+    }        
+
+    /**
+     * Wird von einem Zustand aufgerufen.
+     * <p>
+     * Zeigt eine Übertragung von Text an und gibt diesen an den Dienstbenutzer (Client) weiter.
+     * @param ici Verbindung
+     * @param sdu Text, der übertragen wurde
+     */
+    public synchronized void NickAnmeldungCONFDO(ICI ici,SDU sdu) throws Exception
+    {
+        System.out.println("ChatAnwendungsschicht: NickAnmeldungCONF("+ici.toString()+","+sdu.toString()+")");
+        if(client  != null){
+            client.NickAnmeldungCONF(ici,sdu); // gibt die Text-Anzeige an den server weiter
+        }else {
+            System.err.println("NickAnmeldungCONF: kein Client");
+        }
+    }
+
+    
+    /**
      * Fordert den Übertragungswunsch für einen Text beim Server an.
      * @param ici Verbindung
      * @param sdu Text, der übertragen werden soll
@@ -474,33 +615,6 @@ public class ChatAnwendungsschicht extends Thread
             send(ici,pdu); // verschicke die PDU für diese Verbindung 
         }else {
             System.err.println("TextAnmeldenREQ: kein Client");
-        }
-    }
-
-    /**
-     * Zeigt eine Übertragung von Text an und gibt diesen an den Dienstbenutzer (Client) weiter.
-     * @param ici Verbindung
-     * @param sdu Text, der übertragen wurde
-     */
-    public synchronized void TextIND(ICI ici,SDU sdu) throws Exception
-    {
-        getSocketZustand(ici.socket).zustand.TextIND(this,ici,sdu);
-    }        
-
-    /**
-     * Wird von einem Zustand aufgerufen.
-     * <p>
-     * Zeigt eine Übertragung von Text an und gibt diesen an den Dienstbenutzer (Client) weiter.
-     * @param ici Verbindung
-     * @param sdu Text, der übertragen wurde
-     */
-    public synchronized void TextINDDO(ICI ici,SDU sdu) throws Exception
-    {
-        System.out.println("ChatAnwendungsschicht: TextIND("+ici.toString()+","+sdu.toString()+")");
-        if(client  != null){
-            client.TextIND(ici,sdu); // gibt die Text-Anzeige an den client weiter
-        }else {
-            System.err.println("TextIND: kein Client");
         }
     }
 
@@ -578,6 +692,8 @@ public class ChatAnwendungsschicht extends Thread
                                             case TextAnmeldung :TextAnmeldenIND(ici,sdu); break;
                                             case VerbindungsabbauAnfrage :VerbindungsabbauAnfrageIND(ici,sdu); break;
                                             case Verbindungsabbau :VerbindungsabbauIND(ici,sdu); break;
+                                            case NickAnmeldung: NickAnmeldungIND(ici,sdu); break;
+                                            case NickAnmeldungAntwort: NickAnmeldungCONF(ici,sdu); break;                                            
                                     }
                                 } catch(Exception e){
                                     e.printStackTrace();

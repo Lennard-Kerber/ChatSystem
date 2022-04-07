@@ -7,7 +7,7 @@
  * 
  * Client:
  * <ul>
- * <li> VerbindungsaufbauCONF
+ * <li> NickAnmeldungREQ
  * </ul>
  * <p>
  * Es gibt nur eine Instanz dieser Klasse, die mit dem Singelton-Pattern verwaltet wird.
@@ -15,19 +15,19 @@
  * @author LK
  * @version 2021-11-17
  */
-public class VerbindungsaufbauWartendClient extends ChatAnwendungsschichtZustand
+public class NickAnmeldungClient extends ChatAnwendungsschichtZustand
 {
     // Klassenvariablen
-    private static VerbindungsaufbauWartendClient singelton;
+    private static NickAnmeldungClient singelton;
     
     // Klassenmethode
     /**
      * Gibt das Singelton zurück. Ein Singelton wird beim ersten Aufruf erzeugt.
      * @return Singelton
      */
-    public static  VerbindungsaufbauWartendClient getSingelton(){
+    public static  NickAnmeldungClient getSingelton(){
         if (singelton == null){
-            singelton = new VerbindungsaufbauWartendClient();
+            singelton = new NickAnmeldungClient();
         }
         return singelton;
     }
@@ -37,9 +37,9 @@ public class VerbindungsaufbauWartendClient extends ChatAnwendungsschichtZustand
     /**
      * Konstruktor für Objekte der Klasse Unverbunden
      */
-    private VerbindungsaufbauWartendClient()
+    private NickAnmeldungClient()
     {
-        super("VerbindungsaufbauWartendClient"); // Aufruf des Konstruktors der ChatAnwendungsschichtZustand-Klasse
+        super("NickAnmeldungClient"); // Aufruf des Konstruktors der ChatAnwendungsschichtZustand-Klasse
                               // Der Aufruf der Konstruktormethode des Oberklasse muss in der ersten Zeile des Konstruktors stehen.
     }
      
@@ -47,11 +47,11 @@ public class VerbindungsaufbauWartendClient extends ChatAnwendungsschichtZustand
     /**
      * VerbindungsaufbauCONF
      */
-    public  synchronized void VerbindungsaufbauCONF(ChatAnwendungsschicht kontext,ICI ici,SDU sdu) throws Exception
+    public  synchronized void NickAnmeldungREQ(ChatAnwendungsschicht kontext,ICI ici,SDU sdu) throws Exception
     {
-        System.out.println("Client: VerbindungsaufbauWartendClient -> NickAnmeldungClient");
-        kontext.nextState(ici,NickAnmeldungClient.getSingelton());
-        kontext.VerbindungsaufbauCONFDO(ici,sdu);
+        System.out.println("Client: NickAnmeldungClient -> NickWartendClient");
+        kontext.nextState(ici,NickWartendClient.getSingelton());
+        kontext.NickAnmeldungREQDO(ici,sdu);
     }
 
 }
