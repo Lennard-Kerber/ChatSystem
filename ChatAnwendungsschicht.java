@@ -206,7 +206,7 @@ public class ChatAnwendungsschicht extends Thread
 
             } else {
                 // Verbindungsaufbau fehlgeschlagen
-                
+
                 throw new ConnectionException();
                 //VerbindungsaufbauCONF(new ICI(null,StatusTyp.REJECT), null);
             }
@@ -248,7 +248,7 @@ public class ChatAnwendungsschicht extends Thread
             System.err.println("VerbindungsaufbauIND: kein Server");
         }
     }
-    
+
     /**
      * Server antwortet dem Client.
      * @param ici IP-Adresse in <code>ici.ip</code> und Portangabe in <code>ici.port</code>
@@ -270,7 +270,7 @@ public class ChatAnwendungsschicht extends Thread
     {
         System.out.println("ChatAnwendungsschicht: VerbindungsaufbauRESP("+ici.toString()+","+"––"+")");
         if(server  != null){
-            PDU pdu = new PDU("VerbindungsaufbauAntwort",sdu); // erzeuge eine PDU mit dem Header "Text" und einen Datenteil mit sdu.text
+            PDU pdu = new PDU(Header.VerbindungsaufbauAntwort,sdu); // erzeuge eine PDU mit dem Header "Text" und einen Datenteil mit sdu.text
 
             send(ici,pdu); // verschicke die PDU für diese Verbindung 
         }else {
@@ -278,7 +278,6 @@ public class ChatAnwendungsschicht extends Thread
         }
     }
 
-    
     
     /**
      * Bestätigt den Verbindungsaaufbau des Client dem Dienstbenutzer (Client).
@@ -301,9 +300,9 @@ public class ChatAnwendungsschicht extends Thread
     {
         System.out.println("ChatAnwendungsschicht: VerbindungsaufbauCONF("+ici.toString()+","+"––"+")");
         if(client  != null){
-            
+
             client.VerbindungsaufbauCONF(ici,sdu);
-            
+
         }else {
             System.err.println("VerbindungsaufbauCONF: kein Client");
         }
@@ -330,7 +329,7 @@ public class ChatAnwendungsschicht extends Thread
     {
         System.out.println("ChatAnwendungsschicht: VerbindungsabbauAnfrageREQ("+ici.toString()+","+"––"+")");
         if(client  != null){
-            PDU pdu = new PDU("VerbindungsabbauAnfrage",sdu.text); // erzeuge eine PDU mit dem Header "VerbindungsabbauAnfrage"
+            PDU pdu = new PDU(Header.VerbindungsabbauAnfrage,sdu.text); // erzeuge eine PDU mit dem Header "VerbindungsabbauAnfrage"
 
             send(ici,pdu); // verschicke die PDU für diese Verbindung 
         }else {
@@ -386,7 +385,7 @@ public class ChatAnwendungsschicht extends Thread
     {
         System.out.println("ChatAnwendungsschicht: VerbindungsabbauREQ("+ici.toString()+","+"––"+")");
         if(server  != null){
-            PDU pdu = new PDU("Verbindungsabbau",sdu.text); // erzeuge eine PDU mit dem Header "Verbindungsabbau"
+            PDU pdu = new PDU(Header.Verbindungsabbau,sdu.text); // erzeuge eine PDU mit dem Header "Verbindungsabbau"
 
             send(ici,pdu); // verschicke die PDU für diese Verbindung 
         }else {
@@ -442,7 +441,7 @@ public class ChatAnwendungsschicht extends Thread
     {
         System.out.println("ChatAnwendungsschicht: TextREQ("+ici.toString()+","+sdu.text+")");
         if(server  != null){
-            PDU pdu = new PDU("Text",sdu.text); // erzeuge eine PDU mit dem Header "Text" und einen Datenteil mit sdu.text
+            PDU pdu = new PDU(Header.Text,sdu.text); // erzeuge eine PDU mit dem Header "Text" und einen Datenteil mit sdu.text
 
             send(ici,pdu); // verschicke die PDU für diese Verbindung 
         }else {
@@ -471,7 +470,7 @@ public class ChatAnwendungsschicht extends Thread
     {
         System.out.println("ChatAnwendungsschicht: TextAnmeldenREQ("+ici.toString()+","+sdu.text+")");
         if(client  != null){
-            PDU pdu = new PDU("TextAnmeldung",sdu.text); // erzeuge eine PDU mit dem Header "TextAnmeldung" und einen Datenteil mit sdu.text
+            PDU pdu = new PDU(Header.TextAnmeldung,sdu.text); // erzeuge eine PDU mit dem Header "TextAnmeldung" und einen Datenteil mit sdu.text
 
             send(ici,pdu); // verschicke die PDU für diese Verbindung 
         }else {
@@ -574,11 +573,13 @@ public class ChatAnwendungsschicht extends Thread
 
                                 try{
                                     // verzweige nach dem Header der Nachricht in die entsprechenden Methoden
-                                    if (pdu.header.equalsIgnoreCase("VerbindungsaufbauAntwort")){VerbindungsaufbauCONF(ici,sdu);}
-                                    if (pdu.header.equalsIgnoreCase("Text")){TextIND(ici,sdu);}
-                                    if (pdu.header.equalsIgnoreCase("TextAnmeldung")){TextAnmeldenIND(ici,sdu);}
-                                    if (pdu.header.equalsIgnoreCase("VerbindungsabbauAnfrage")){VerbindungsabbauAnfrageIND(ici,sdu);}
-                                    if (pdu.header.equalsIgnoreCase("Verbindungsabbau")){VerbindungsabbauIND(ici,sdu);}
+                                    switch (pdu.header){
+                                            case VerbindungsaufbauAntwort : VerbindungsaufbauCONF(ici,sdu); break;
+                                            case Text : TextIND(ici,sdu); break;
+                                            case TextAnmeldung :TextAnmeldenIND(ici,sdu); break;
+                                            case VerbindungsabbauAnfrage :VerbindungsabbauAnfrageIND(ici,sdu); break;
+                                            case Verbindungsabbau :VerbindungsabbauIND(ici,sdu); break;
+                                    }
                                 } catch(Exception e){
                                     e.printStackTrace();
                                 }

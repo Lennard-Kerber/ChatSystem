@@ -15,7 +15,7 @@ public class PDU
 {
 
     // Instanzvariablen
-    public String header;
+    public Header header;
     public String sdu;
 
     /**
@@ -23,7 +23,7 @@ public class PDU
      * @param header Header der Nachricht
      * @param sdu Datenteil der Nachricht
      */
-    public PDU(String header, String sdu)
+    public PDU(Header header, String sdu)
     {
         // Instanzvariable initialisieren
         this.header = header;
@@ -36,7 +36,7 @@ public class PDU
      * @param header Header der Nachricht
      * @param sdu Datenteil der Nachricht
      */
-    public PDU(String header, SDU sdu)
+    public PDU(Header header, SDU sdu)
     {
         // Instanzvariable initialisieren
         this.header = header;
@@ -56,10 +56,10 @@ public class PDU
 
         // Instanzvariable initialisieren
         if (strArray.length == 2) {
-            this.header = strArray[0];
+            this.header = Header.valueOf(strArray[0]);
             this.sdu    = strArray[1];
         } else {
-            this.header = "HEADER-ERROR";
+            this.header = Header.NullHeader;
             this.sdu    = "SDU-ERROR";
         }
     }
@@ -70,7 +70,7 @@ public class PDU
      * return PDU
      */
     String getPDU(){
-        return header+":"+sdu;
+        return header.toString()+":"+sdu;
     }
     
 }

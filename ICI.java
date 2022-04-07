@@ -21,7 +21,6 @@ public class ICI
     public static final int NULLPORT = -1;
 
     // public-Attribute erlauben den direkten Zugriff von außen
-    public StatusTyp status;
     public Socket socket; // Socket-Objekte dienen als Identifikatoren für Verbindungen
     public String ip;  // IP-Adresse des Servers
     public int port; // Port des Servers
@@ -36,21 +35,6 @@ public class ICI
         this.socket = socket;
         this.ip = null;
         this.port = NULLPORT;
-        this.status = StatusTyp.ACCEPT; 
-    }
-
-    /**
-     * Konstruktor für Objekte der Klasse ICI
-     * @param socket Socket der Verbindung
-     * @param status Status des Dienstes
-     */
-    public ICI(Socket socket, StatusTyp status)
-    {
-        // Instanzvariable initialisieren
-        this.socket = socket;
-        this.ip = null;
-        this.port = NULLPORT;
-        this.status = status;
     }
 
     /**
@@ -64,7 +48,6 @@ public class ICI
         this.socket = null;
         this.ip = ip;
         this.port = port;
-        this.status = StatusTyp.ACCEPT;
     }
 
     /**
@@ -77,7 +60,6 @@ public class ICI
         this.socket = null;
         this.ip = null;
         this.port = port;
-        this.status = StatusTyp.ACCEPT;
     }
 
     /**
@@ -89,7 +71,6 @@ public class ICI
             this.socket = socket;
             this.ip = null;
             this.port = NULLPORT; 
-            this.status = StatusTyp.ACCEPT;
         } else {
             System.err.println("ICI: update-Error");
         }
@@ -116,9 +97,6 @@ public class ICI
 
         }
 
-        if (status != StatusTyp.NO_STATUS){
-            iciString = iciString + status.toString();
-        }
 
         return iciString;
 
