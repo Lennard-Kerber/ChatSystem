@@ -162,7 +162,7 @@ public class ChatClient implements ClientType
 
         // wenn eine Verbindung besteht
         if (myICI != null){
-            SDU sdu = new SDU(benutzer.name+": "+text,benutzer.r,benutzer.g,benutzer.b); 
+            SDU sdu = new SDU(benutzer.name+"! "+text,benutzer.r,benutzer.g,benutzer.b); 
             try{
                 anwendungsschicht.TextAnmeldenREQ(myICI,sdu); // fordere einen Textwunsch beim Server an
             } catch(Exception e){
